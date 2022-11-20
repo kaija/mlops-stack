@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 
 AZURE_DOC_BASE = "https://learn.microsoft.com/azure/databricks"
 AWS_DOC_BASE = "https://docs.databricks.com"
+GCP_DOC_BASE = "https://docs.gcp.databricks.com"
 
 
 @simple_filter
@@ -21,7 +22,12 @@ def generate_doc_link(path, cloud):
     """
     if cloud == "azure" and path == "repos/set-up-git-integration.html":
         path = "repos/repos-setup"
-    baseUrl = AZURE_DOC_BASE if cloud == "azure" else AWS_DOC_BASE
+    if cloud == "azure":
+        baseUrl = AZURE_DOC_BASE
+    elif  if cloud == "gcp":
+        baseUrl = GCP_DOC_BASE
+    else:
+        baseUrl = AWS_DOC_BASE
     newDocsPath = path.replace(".html", "") if cloud == "azure" else path
     return f"{baseUrl}/{newDocsPath}"
 
