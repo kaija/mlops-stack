@@ -8,7 +8,7 @@ variable "git_token" {
   sensitive   = true
   validation {
     condition     = length(var.git_token) > 0
-    error_message = "The git_token variable cannot be empty"
+    error_message = "The git_token variable cannot be empty."
   }
 }
 
@@ -36,7 +36,7 @@ variable "github_repo_url" {
   description = "URL of the hosted git repo containing the current ML project, e.g. https://github.com/myorg/myrepo"
   validation {
     condition     = length(var.github_repo_url) > 0
-    error_message = "The github_repo_url variable cannot be empty"
+    error_message = "The github_repo_url variable cannot be empty."
   }
 }
 {% endif -%}

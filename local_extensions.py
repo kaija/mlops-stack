@@ -24,7 +24,7 @@ def generate_doc_link(path, cloud):
         path = "repos/repos-setup"
     if cloud == "azure":
         baseUrl = AZURE_DOC_BASE
-    elif  if cloud == "gcp":
+    elif  cloud == "gcp":
         baseUrl = GCP_DOC_BASE
     else:
         baseUrl = AWS_DOC_BASE

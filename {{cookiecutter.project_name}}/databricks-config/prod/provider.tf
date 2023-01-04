@@ -28,6 +28,16 @@ terraform {
     dynamodb_table = "{{cookiecutter.project_name}}-tfstate-lock"
     region         = "us-east-1"
   }
+  {% elif cookiecutter.cloud == "gcp" -%}
+  // The `backend` block below configures the gcs backend
+  // (docs: https://www.terraform.io/language/settings/backends/gcs)
+  // for storing Terraform state in an GCP gcs bucket. You can run the setup scripts in mlops-setup-scripts/terraform to
+  // provision the gcs bucket referenced below and store appropriate credentials for accessing the bucket from CI/CD.
+  backend "gcs" {
+    bucket         = "{{cookiecutter.project_name}}-tfstate"
+    key            = "prod.terraform.tfstate"
+    location       = "US"
+  }
   {% endif -%}
   required_providers {
     databricks = {

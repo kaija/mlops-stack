@@ -9,7 +9,7 @@ COOKIECUTTER_ROOT_DIRECTORY = str(pathlib.Path(__file__).parent.parent)
 
 def parametrize_by_cloud(fn):
     @wraps(fn)
-    @pytest.mark.parametrize("cloud", ["aws", "azure"])
+    @pytest.mark.parametrize("cloud", ["aws", "azure", "gcp"])
     def wrapper(*args, **kwargs):
         return fn(*args, **kwargs)
 
@@ -22,9 +22,11 @@ def parametrize_by_project_generation_params(fn):
         [
             ("aws", "GitHub Actions", "no"),
             ("azure", "GitHub Actions", "no"),
+            ("gcp", "GitHub Actions", "no"),
             ("azure", "Azure DevOps", "no"),
             ("aws", "GitHub Actions", "yes"),
             ("azure", "GitHub Actions", "yes"),
+            ("gcp", "GitHub Actions", "yes"),
             #  ADO + Feature Store is not supported yet.
             # ("azure", "Azure DevOps", "yes""),
         ],

@@ -13,6 +13,12 @@ import cookiecutter
                 "cloud_specific_node_type_id": "Standard_D3_v2"
             }
         )}}
+{%- elif cookiecutter.cloud == "gcp" -%}
+    {{ cookiecutter.update(
+            {
+                "cloud_specific_node_type_id": "n2-highmem-4"
+            }
+        )}}
 {% endif %}
 
 {%- if cookiecutter.cicd_platform == "GitHub Actions" -%} 
@@ -56,6 +62,12 @@ import cookiecutter
     }}
 {% endif %}
 
+{%- if "Default: `" in cookiecutter.databricks_staging_workspace_host and cookiecutter.cloud == 'gcp' -%}
+    {{
+        cookiecutter.update({"databricks_staging_workspace_host": "https://your-staging-workspace.gcp.databricks.com" })
+    }}
+{% endif %}
+
 {%- if "Default: `" in cookiecutter.databricks_prod_workspace_host and cookiecutter.cloud == 'azure' -%}
     {{
         cookiecutter.update({"databricks_prod_workspace_host": "https://adb-xxxx.xx.azuredatabricks.net" })
@@ -65,6 +77,12 @@ import cookiecutter
 {%- if "Default: `" in cookiecutter.databricks_prod_workspace_host and cookiecutter.cloud == 'aws' -%}
     {{
         cookiecutter.update({"databricks_prod_workspace_host": "https://your-prod-workspace.cloud.databricks.com" })
+    }}
+{% endif %}
+
+{%- if "Default: `" in cookiecutter.databricks_prod_workspace_host and cookiecutter.cloud == 'gcp' -%}
+    {{
+        cookiecutter.update({"databricks_prod_workspace_host": "https://your-prod-workspace.gcp.databricks.com" })
     }}
 {% endif %}
 

@@ -40,7 +40,7 @@ To track the state of deployed ML resources with Terraform, you must:
 2. Configure Terraform to store state in the remote backend. 
 
 By default, this repo is configured to store resource state in a dedicated
-{% if cookiecutter.cloud == "azure" %} Azure Blob Storage container {% elif cookiecutter.cloud == "aws" %} S3 bucket {% endif %},
+{% if cookiecutter.cloud == "azure" %} Azure Blob Storage container {% elif cookiecutter.cloud == "aws" %} S3 bucket {% elif cookiecutter.cloud == "gcp" %} gcs bucket {% endif %},
 defined in `staging/provider.tf` and `prod/provider.tf`. However, the repo does not automatically provision the
 remote state storage location for you, nor does it store credentials in CI/CD for accessing remote state files.
 

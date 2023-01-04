@@ -48,6 +48,15 @@ terraform {
     dynamodb_table = "{{cookiecutter.project_name}}-cicd-setup-tfstate-lock"
     key            = "cicd-setup.terraform.tfstate"
   }
+{% elif cookiecutter.cloud == "gcp" -%}
+  // The `backend` block below configures the gcs backend
+  // (docs: https://www.terraform.io/language/settings/backends/gcs)
+  // for storing Terraform state in an GCP gcs bucket. The targeted gcs bucket is
+  // provisioned by the Terraform config under .mlops-setup-scripts/terraform
+  backend "gcs" {
+    bucket         = "{{cookiecutter.project_name}}-cicd-setup-tfstate"
+    key            = "cicd-setup.terraform.tfstate"
+  }
 {%- endif %}
 }
 

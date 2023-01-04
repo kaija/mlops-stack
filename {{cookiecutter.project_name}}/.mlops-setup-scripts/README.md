@@ -41,6 +41,8 @@ The scripts set up CI/CD with Azure DevOps. During initial set up we do the foll
 * Install Azure CLI: ``pip install azure-cli``
 {% elif cookiecutter.cloud == "aws" -%}
 * Install AWS CLI: ``pip install awscli``
+{% elif cookiecutter.cloud == "gcp" -%}
+* Install GCP CLI: download the installation package from https://cloud.google.com/sdk/docs/install ``./google-cloud-sdk/install.sh`` 
 {%- endif %}
 
 ### Verify permissions
@@ -85,6 +87,10 @@ To use the scripts, you must:
 * Have permission to manage AWS IAM users and attached IAM policies (`"iam:*"` permissions) in the current AWS account.
   If you lack sufficient permissions, you'll see an error message describing any missing permissions when you
   run the setup scripts below. If that occurs, contact your AWS account admin to request any missing permissions.
+  {% elif cookiecutter.cloud == "gcp" -%}
+* Have permission to manage GCP service account and attached IAM permission in the current GCP account.
+  If you lack sufficient permissions, you'll see an error message describing any missing permissions when you
+  run the setup scripts below. If that occurs, contact your GCP account admin to request any missing permissions.
 {%- endif %}
 
 {% if cookiecutter.cloud == "azure" -%}
@@ -99,6 +105,8 @@ To use the scripts, you must:
 * Run `aws configure --profile {{cookiecutter.project_name}}` to configure an AWS CLI profile, passing the access key ID and secret access key from the previous step
 * Run `export AWS_PROFILE={{cookiecutter.project_name}}` to indicate to Terraform that it should use the newly-created AWS CLI profile
   to authenticate to AWS
+{% elif cookiecutter.cloud == "gcp" -%}
+* Run `gcloud auth application-default login` to configure the GCP CLI credential
 {%- endif %}
 
 ### Configure Databricks auth
@@ -112,7 +120,7 @@ To use the scripts, you must:
 * Create a Databricks REST API token in the prod workspace ([link]({{cookiecutter.databricks_prod_workspace_host}}#setting/account)).
   and paste the value into the prompt
 
-{% if cookiecutter.cloud == "aws" -%}
+{% if cookiecutter.cloud == "aws" or cookiecutter.cloud == "gcp" -%}
 ### Set up service principal user group
 Ensure a group named `{{cookiecutter.service_principal_group}}` exists in the staging and prod workspace, e.g.
 by checking for the group in the [staging workspace admin console]({{cookiecutter.databricks_staging_workspace_host}}#setting/accounts/groups) and
@@ -214,6 +222,12 @@ Take care to run the Terraform bootstrap script before the CI/CD bootstrap scrip
 3. Write credentials for accessing the S3 bucket and Dynamo DB table in (1) to a file.
 4. Create Databricks service principals configured for CI/CD, write their credentials to a file, and store their
    state in the S3 bucket and DynamoDB table created in (2). 
+{% elif cookiecutter.cloud == "gcp" %}
+1. Create an GCP gcs bucket for storing ML resource config (job, MLflow experiment, etc) state for the
+2. Create another GCP gcs bucket for storing the state of CI/CD principals provisioned for the current
+   ML project. 
+3. Create Databricks service principals configured for CI/CD, write their credentials to a file, and store their
+   state in the gcs bucket created in (2). 
 {% endif %}
 
 Each `bootstrap.py` script will print out the path to a JSON file containing generated secret values
@@ -229,6 +243,8 @@ where the JSON key
 {% if cookiecutter.cloud == "azure" -%}
 (e.g. `PROD_AZURE_SP_APPLICATION_ID`)
 {% elif cookiecutter.cloud == "aws" -%}
+(e.g. `PROD_WORKSPACE_TOKEN`)
+{% elif cookiecutter.cloud == "gcp" -%}
 (e.g. `PROD_WORKSPACE_TOKEN`)
 {% endif -%} 
 is the expected name of the secret in GitHub Actions and the JSON value
@@ -293,7 +309,7 @@ in your repo named "staging" and "prod"
 
 ### Secret rotation
 The generated CI/CD
-{% if cookiecutter.cloud == "aws" -%}
+{% if cookiecutter.cloud == "aws" or cookiecutter.cloud == "gcp" -%}
 Databricks service principal REST API tokens have an [expiry of 100 days](https://github.com/databricks/terraform-databricks-mlops-aws-project#mlops-aws-project-module)
 {% elif cookiecutter.cloud == "azure" -%}
 Azure application client secrets have an expiry of [2 years](https://github.com/databricks/terraform-databricks-mlops-azure-project-with-sp-creation#outputs)
